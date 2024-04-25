@@ -7,3 +7,4 @@ deletePostConfirmation = function (postId) {
       window.location.href = urlPath;
     }
   }
+

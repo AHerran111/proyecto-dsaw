@@ -3,105 +3,124 @@
 "use strict";
 
 const fs = require('fs');
-const Product = require('./products');
+const Post = require('./post');
 
-// fs.readFile("products.json", 'utf8', (err, data) => {
+const postsPath = './app/data/posts.json';
+
+let content = fs.readFileSync(postsPath);
+let posts = JSON.parse(content).map(Post.createFromObject);
+
+function deletePost(postId) {
+    
+    for (let i = 0; i < posts.length; i++) {
+        let elem = posts[i];
+
+        if (elem.postId === postId) {
+            // delete it
+            posts.splice(i, 1);
+            fs.writeFileSync(postsPath, JSON. stringify(posts));
+            return true;
+        }
+    }
+    fs.writeFileSync(postsPath, JSON. stringify(posts));
+
+    return false;
+}
+
+// fs.readFile("Posts.json", 'utf8', (err, data) => {
 //     if (err) {
 //         console.error("Error in here reading file");
 //         return;
 //     }
 
-//     const products = JSON.parse(data); // load data
-//     console.log(products);
+//     const Posts = JSON.parse(data); // load data
+//     console.log(Posts);
 // })
 
-const fileProductsPath = './app/data/products.json';
-
-let content = fs.readFileSync(fileProductsPath);
-let products = JSON.parse(content).map(Product.createFromObject);
 
 
-function getProducts() {
-    return products;
+
+function getPosts() {
+    return posts;
 }
 
-function getProductsById(productUUID) {
-    console.log(products);
-    return products.find(product => product.uuid === productUUID || product._uuid === productUUID);
+function getPostsById(postId) {
+    console.log(posts);
+    return posts.find(post => post.postId === postId || post.postId === postId);
 }
 
-function getUUIDByTitle(title) {
-    const product = products.find(product => product._title === title);
+/* function getIdByTitle(title) {
+    const post = Posts.find(post => post._title === title);
 
-    if (product) {
-        return product.uuid;
+    if (post) {
+        return post.uuid;
     } else {
-        return null; // Product with the specified title not found
+        return null; // post with the specified title not found
     }
 }
+*/
 
-function createProduct(product) {
-    products.push(Product.createFromObject(product));
-    fs.writeFileSync(fileProductsPath, JSON.stringify(products));
+function createPost(post) {
+    posts.push(Post.createFromObject(post));
+    fs.writeFileSync(postsPath, JSON.stringify(posts));
 }
 
-function updateProduct(productUUID, updatedProduct) {
-    let productFounded = products.find(product => product.uuid === productUUID);
-    let productIndex = products.findIndex(product => product.uuid === productUUID);
+function updatepost(postId, updatedPost) {
+    let postFounded = posts.find(post => post.postId === postId);
+    let postIndex = posts.findIndex(post => post.postId === postId);
 
-    if (!productFounded) {
+    if (!postFounded) {
         return false;
     }
 
-    let newUpdatedProduct = updatedProduct;
-    if (typeof updatedProduct === "string") {
-        newUpdatedProduct = JSON.parse(newUpdatedProduct);
+    let newUpdatedPost = updatedPost;
+    if (typeof updatedPost === "string") {
+        newUpdatedPost = JSON.parse(newUpdatedPost);
     }
 
-    products.splice(productIndex, 1);
+    posts.splice(postIndex, 1);
 
-    console.log("NEW UPDATED PRODUCT: " + JSON.stringify(newUpdatedProduct));
+    console.log("NEW UPDATED post: " + JSON.stringify(newUpdatedPost));
 
-    // migrate properties to product
-    productFounded.title = newUpdatedProduct?.title ?? productFounded.title;
-    productFounded.description = newUpdatedProduct?.description ?? productFounded.description;
-    productFounded.imageUrl = newUpdatedProduct?.imageUrl ?? productFounded.imageUrl;
-    productFounded.unit = newUpdatedProduct?.unit ?? productFounded.unit;
-    productFounded.stock = newUpdatedProduct?.stock ?? productFounded.stock;
-    productFounded.pricePerUnit = newUpdatedProduct?.pricePerUnit ?? productFounded.pricePerUnit;
-    productFounded.category = newUpdatedProduct?.category ?? productFounded.category;
+    // migrate properties to post
+    postFounded.title = newUpdatedPost?.title ?? postFounded.title;
+    postFounded.description = newUpdatedPost?.summary ?? postFounded.summary;
+    postFounded.imageUrl = newUpdatedPost?.imageUrl ?? postFounded.imageUrl;
+    postFounded.unit = newUpdatedPost?.user ?? postFounded.user;
+    postFounded.stock = newUpdatedPost?.section ?? postFounded.section;
+    postFounded.pricePerUnit = newUpdatedPost?.content ?? postFounded.content;
 
-    products.push(newUpdatedProduct);
+    posts.push(newUpdatedPost);
     
     // return if everything ok
     return true;
 }
 
-function deleteProduct(productUUID) {
+function deletePost(postId) {
     
-    for (let i = 0; i < products.length; i++) {
-        let elem = products[i];
-        if (elem.uuid === productUUID) {
+    for (let i = 0; i < posts.length; i++) {
+        let elem = oosts[i];
+        if (elem.postId === postId) {
             // delete it
-            products.splice(i, 1);
-            fs.writeFileSync(fileProductsPath, JSON. stringify(products));
+            posts.splice(i, 1);
+            fs.writeFileSync(postsPath, JSON. stringify(posts));
             return true;
         }
     }
-    fs.writeFileSync(fileProductsPath, JSON. stringify(products));
+    fs.writeFileSync(postsPath, JSON. stringify(posts));
 
     return false;
 }
 
 
-function findProduct(query) {
+function findpost(query) {
     // pass
 }
 
 
-exports.getProducts = getProducts;
-exports.getProductsById = getProductsById
-exports.createProduct = createProduct;
-exports.updateProduct = updateProduct;
-exports.deleteProduct = deleteProduct;
-exports.findProduct = findProduct;
+exports.getPosts = getPosts;
+exports.getPostsById = getPostsById
+exports.createPost = createPost;
+exports.updatePost = updatepost;
+exports.deletePost = deletePost;
+exports.findpost = findpost;

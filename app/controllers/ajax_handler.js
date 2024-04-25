@@ -33,11 +33,11 @@ function putPost(url,post, onSuccess, onError) {
     xhr.onload = () => getXhrResponse(xhr, onSuccess, onError);
 }
 
-function deletePost(url, onSuccess, onError) {
+function deletePost(url,post, onSuccess, onError) {
     let xhr = new XMLHttpRequest();
     
     xhr.open('DELETE', url);
-    xhr.send();
+    xhr.send(post._postId);
     xhr.onload = () => getXhrResponse(xhr, onSuccess, onError);
 }
 

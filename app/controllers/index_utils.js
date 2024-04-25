@@ -1,6 +1,6 @@
 "use strict";
 
-let postContainer = document.getElementById('card-container');
+//let postContainer = document.getElementById('card-container');
 
 
 function postDetailsToHtml(post) {
@@ -27,58 +27,24 @@ function postListtoHtml(postList) {
     postContainer.innerHTML = '<div class="row mt-5">\n' + postList.map(postToHtml).join("\n") + "\n<div>";
 }
 
-function priceSummaryToHtml(post,amount) {
-    return `
-    <p> ${post._title}: ${amount} x ${post._pricePerUnit}</p>
-    <hr class="dashed">`;
+
+
+
+loadPosts(postsUrl).then(posts => {
+    postListtoHtml(posts);
+});
+
+
+function removePost(post) {
+    
+   deletePost(postsUrl,post,onSucces,onError);
+
+   loadPosts(postsUrl).then(posts => {
+    postListtoHtml(posts);
+    });
 }
 
-function shoppingCartToHtml() {
-    let cart = readShoppingCart();
-    console.log(cart);
-    postContainer.innerHTML = cart._postProxies.map((proxy) => {
-        const post = cart._posts.find((p) => p._uuid === proxy.postUuid);
-        return postDetailsToHtml(post, proxy.ammount);
-      });
-}
-
-function totalToHtml(){
-    let cart = readShoppingCart();
-    let total = 0;
-
-    postTotalContainer.innerHTML = cart._postProxies.map((proxy) => {
-        const post = cart._posts.find((p) => p._uuid === proxy.postUuid);
-        total += (post._pricePerUnit*proxy.ammount);
-        return priceSummaryToHtml(post, proxy.ammount);
-      }) + `<p>Monto a pagar : ${total} </p><br></br>`;
-
-      
-}
-
-function preloadShoppingCart() {
-
-}
-
-
-
-
-//
-
-function removePost(event) {
-    let cart = readShoppingCart();
-
-    const postTitle = event.target.closest("li").querySelector("[id=postTitle]").innerText;
-    console.log(postTitle);
-
-    const postIndex = cart._posts.findIndex(post => post._title === postTitle);
-    cart._posts.splice(postIndex, 1);
-    cart._postProxies.splice(postIndex, 1);
-    writeShoppingCart(cart);
-    shoppingCartToHtml();
-    totalToHtml();
-    eventCreator();
-}
-
+/*
 let oldAmount = 0;
 
 function enableAmount(event) {
@@ -149,4 +115,4 @@ function eventCreator() {
 }
 
 eventCreator();
-
+*/

@@ -14,5 +14,5 @@ function isFloat(value) {
 }
 
 
-exports.generateUUID = generateUUID;
+exports.idGenerator = idGenerator;
 exports.isFloat = isFloat

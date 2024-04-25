@@ -4,8 +4,8 @@ const utils = require('./utils');
 
 class Post {
 
-    constructor(title, summary, imageUrl, user,section,content) {
-        this._postId = utils.idGenerator();
+    constructor(postId,title, summary, imageUrl, user,section,content) {
+        this._postId = postId;
         this._title = title;
         this._summary = summary;
         this._imageUrl = imageUrl;
@@ -16,7 +16,7 @@ class Post {
 
     toJSON() {
         return {
-            postId:this_postId,
+            postId:this._postId,
             title:this._title,
             summary:this._summary,
             imageUrl:this._imageUrl,
@@ -31,7 +31,7 @@ class Post {
     }
 
     set postId(value) {
-        throw new PostException("Post Id is automatically generated");
+        this._postId= value;
     }
 
     get title() {
@@ -42,7 +42,7 @@ class Post {
         if (typeof value !== "string" || value === "") {
             throw new PostException("Product title cannot be empty");
         }
-
+        else this._title = value;
     }
 
     get summary() {
@@ -103,7 +103,8 @@ class Post {
         let newPost = {};
         Object.assign(newPost, obj);
 
-        let product = new Post(
+        let post = new Post(
+            newPost.postId,
             newPost.title,
             newPost.summary,
             newPost.imageUrl, 
@@ -113,10 +114,10 @@ class Post {
         )
         
         if (newPost.postId !== undefined) {
-            newPost.postId = idGenerator();
+            newPost.postId = utils.idGenerator();
         }
         
-        return product;
+        return post;
     }
 
 
@@ -142,4 +143,4 @@ class PostException {
 }
 
 
-module.exports = Product;
+module.exports = Post;

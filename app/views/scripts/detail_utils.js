@@ -7,7 +7,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('postId');
 
 
-
+console.log(postId);
 
 function postToHtml(post) {
     return `<div class="row">
@@ -188,6 +188,7 @@ ${post.title}
 
 
 getPost(postId).then(postRes => {
+    console.log(postRes);
     postContainer.innerHTML = postToHtml(postRes);
   });
 

@@ -94,7 +94,7 @@
           </a>
 
           <!--If is owner? render this button-->
-          <button class='btn-post-delete btn btn-danger' onclick="deletePostConfirmation({{ post.post_id }})">
+          <button class='btn-post-delete btn btn-danger' onclick="deletePostConfirmation()">
             Delete post
           </button>
 
@@ -151,6 +151,11 @@
       </div> -->
     </div>
   </footer>
+
+  <script src="./scripts/post.js"></script>
+  <script src="./scripts/ajax_handler.js"></script>
+  <script src="./scripts/utils.js"></script>
+  <script src="./scripts/index_utils.js"></script>
 
 </body>
 <script>

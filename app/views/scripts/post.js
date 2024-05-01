@@ -171,5 +171,3 @@ class PostException {
         this.errorMessage = errorMessage;
     }
 }
-
-module.exports = Post;

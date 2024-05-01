@@ -32,6 +32,22 @@ router.get(['/posts'],(req, res) => {
 
 });
 
+router.get(['/posts/:id'],(req, res) => {
+    //let query = req.query.filter;
+
+    let id = req.params.id;
+    let post;
+
+    try {
+        post = dataHandler.getPostsById(id);
+
+    } catch(e) {
+        res.status(400).send("Error obtaining posts",e);
+    }
+    res.status(200).json(post);
+
+});
+
 
 router.get('/shopping_cart', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'cart.html'));

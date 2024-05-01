@@ -6,6 +6,14 @@ async function loadPosts(url) {
     return await response.json();
 }
 
+async function getPost(postId) {
+    let response = await fetch(postsUrl + postId)
+    if (response.status != 200) return [];
+    let data = await response.json();
+    return data.value;
+}
+
+
 /* function loadCartProducts(url, productList, onSuccess, onError) {
     let xhr = new XMLHttpRequest();
     

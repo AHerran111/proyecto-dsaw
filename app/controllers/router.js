@@ -298,6 +298,100 @@ router.delete('/users/username:/post_id:/', async (req, res) => {
 
 // });
 
+//Aqui empieza CRUD de Crear y Actualizar con sus respectivos Middleware
+
+// Middleware para validar que el usuario está autenticado
+function isAuthenticated(req, res, next) {
+    const token = req.headers['authorization'];
+    if (!token) {
+        return res.status(401).json({ state: 'error', message: 'Access denied. No token provided.' });
+    }
+    //Lógica para validar el token
+    firebaseHelper.validateToken(req.params.username, token)
+        .then(isValid => {
+            if (!isValid) {
+                return res.status(403).json({ state: 'error', message: 'Invalid token.' });
+            }
+            next();
+        })
+        .catch(error => {
+            console.error('Token validation error:', error);
+            res.status(500).json({ state: 'error', message: 'Internal server error.' });
+        });
+}
+
+// Ruta POST para crear un nuevo post
+router.post('/users/:username/posts', isAuthenticated, async (req, res) => {
+    const { title, content } = req.body;
+    const username = req.params.username;
+
+    if (!title || !content) {
+        return res.status(400).json({ state: 'error', message: 'Se requiere agregar titulo y contenido.' });
+    }
+
+    try {
+        const newPost = {
+            title,
+            content,
+            date_created: new Date().toISOString(),
+            username: username // Asegúrate de que el nombre de usuario está correctamente asociado al post
+        };
+
+        const postId = await firebaseHelper.createPost(newPost);
+        res.status(201).json({ state: 'success', message: 'Post creado exitosamente.', postId: postId });
+    } catch (error) {
+        console.error('Error creating post:', error);
+        res.status(500).json({ state: 'error', message: 'Error al crear el post.', error: error.message });
+    }
+});
+
+
+// Middleware para validar que el usuario está autenticado y autorizado para actualizar el post 
+function isAuthenticatedAndAuthorized(req, res, next) {
+    const token = req.headers['authorization'];
+    if (!token) {
+        return res.status(401).json({ state: 'error', message: 'Acceso denegado,No se proporciono el token.'});
+    }
+    // Asumimos que 'validateToken' verifica la validez del token y la autorización para actualizar un post específico
+    firebaseHelper.validateToken(req.params.username, token, req.params.postId)
+        .then(isValid => {
+            if (!isValid) {
+                return res.status(403).json({ state: 'error', message: 'No estas autorizado para actualizar este post' });
+            }
+            next();
+        })
+        .catch(error => {
+            console.error('Token validation error:', error);
+            res.status(500).json({ state: 'error', message: 'Internal server error.' });
+        });
+}
+
+// Ruta PUT para actualizar un post existente del usuario 
+router.put('/users/:username/posts/:postId', isAuthenticatedAndAuthorized, async (req, res) => {
+    const { title, content } = req.body;
+    const { username, postId } = req.params;
+
+    if (!title || !content) {
+        return res.status(400).json({ state: 'error', message: 'Se requiere titulo y contenido.'});
+    }
+
+    try {
+        const updatedPost = {
+            title,
+            content,
+            date_updated: new Date().toISOString(),
+        };
+
+        const result = await firebaseHelper.updatePost(postId, updatedPost);
+        res.status(200).json({ state: 'success', message: 'Post actualizado correctamente.', postId: postId, updatedPost: result });
+    } catch (error) {
+        console.error('Error al actualizar el post:', error);
+        res.status(500).json({ state: 'error', message: 'Error al actualizar el post.', error: error.message });
+    }
+});
+
+//Aqui termina CRUD de Crear y Actualizar con sus respectivos Middleware
+
 router.get('/api/posts', async (req, res) => {
     try {
         // Obtener todos los posts desde la base de datos

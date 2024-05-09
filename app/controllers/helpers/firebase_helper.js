@@ -183,26 +183,33 @@ function getUserPosts(username, token) {
   });
 }
 
-function validateToken(username, token) {
+function validateToken(username, token, postId) {
   return new Promise((resolve, reject) => {
-    const userRef = database.ref(`Clients/${username}/userTOKEN`);
-
-    userRef
-      .once("value", (snapshot) => {
-        if (snapshot.exists()) {
-          const userToken = snapshot.val();
-          if (userToken === token) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        } else {
-          resolve(false);
-        }
-      })
-      .catch((error) => {
-        reject(error);
-      });
+      //verificamos que el token sea válido
+      verifyToken(token)
+          .then(isValid => {
+              if (!isValid) {
+                  resolve(false);
+                  return;
+              }
+              // En esta seccion el token es válido, ahora verifica si el usuario tiene acceso al post
+              const postRef = firebase.database().ref(`posts/${postId}`);
+              postRef.once('value', snapshot => {
+                  const post = snapshot.val();
+                  if (!post) {
+                      resolve(false);  // El post no existe
+                  } else if (post.username === username) {
+                      resolve(true);   // El usuario es el autor del post
+                  } else {
+                      resolve(false);  // El usuario no es el autor del post
+                  }
+              }).catch(error => {
+                  reject(error);
+              });
+          })
+          .catch(error => {
+              reject(error);
+          });
   });
 }
 

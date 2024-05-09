@@ -13,6 +13,13 @@ async function getPost(postId) {
 }
 
 
+async function searchPosts(query) {
+    let response = await fetch(postsUrl + 'search/' + query)
+    if (response.status != 200) return [];
+    return await response.json();
+}
+
+
 /* function loadCartProducts(url, productList, onSuccess, onError) {
     let xhr = new XMLHttpRequest();
     
@@ -31,10 +38,10 @@ async function getPost(postId) {
 }
 */
 
-function putPost(url,post, onSuccess, onError) {
+function postPost(url,post, onSuccess, onError) {
     let xhr = new XMLHttpRequest();
     
-    xhr.open('PUT', url);
+    xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(post));
     xhr.onload = () => getXhrResponse(xhr, onSuccess, onError);

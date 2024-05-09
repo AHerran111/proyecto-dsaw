@@ -100,8 +100,14 @@ function updatepost(postId, updatedPost) {
 }
 
 
-function findpost(query) {
-    // pass
+function searchPosts(query) {
+   
+    query = query.toLowerCase(); // Convert query to lowercase for case-insensitive comparison
+        return posts.filter(post => {
+            return post._title.toLowerCase().includes(query) || post._content.toLowerCase().includes(query);
+        });
+    
+
 }
 
 
@@ -110,5 +116,5 @@ exports.getPostsById = getPostsById
 exports.createPost = createPost;
 exports.updatePost = updatepost;
 exports.deletePost = deletePost;
-exports.findpost = findpost;
+exports.searchPosts = searchPosts;
 exports.getIdByTitle = getIdByTitle;

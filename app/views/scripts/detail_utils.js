@@ -7,8 +7,6 @@ const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('postId');
 
 
-console.log(postId);
-
 function postToHtml(post) {
     return `<div class="row">
     <div class="col-md-3">
@@ -36,7 +34,7 @@ function postToHtml(post) {
         <a>
             <form id="downvote-post-form-{{ post.post_id }}" class="d-inline" method="POST" action="{% url 'blog:vote-post' post.post_id %}?upvote=False">
                 <a href="javascript:;" onclick="document.getElementById('downvote-post-form-{{ post.post_id }}').submit();">
-                    <img src="{% static 'images/downvote.png' %}" alt="Downvote">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUzHs10vMoxltLiZ9ESSD4RTsQ50nkbFqLM5vplanKAA&s" alt="Downvote">
                 </a>
             </form>
             <!-- Render number of dislikes -->

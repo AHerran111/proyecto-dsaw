@@ -43,7 +43,7 @@ class Post {
 
     set title(value) {
         if (typeof value !== "string" || value === "") {
-            throw new PostException("Product title cannot be empty");
+            throw new PostException("Post title cannot be empty");
         }
         else this._title = value;
     }
@@ -54,7 +54,7 @@ class Post {
 
     set summary(value) {
         if (typeof value !== "string" || value === "") {
-            throw new PostException("Product description cannot be empty");
+            throw new PostException("Post description cannot be empty");
         }
         else this._summary = value;
     }
@@ -65,7 +65,7 @@ class Post {
 
     set imageUrl(value) {
         if (typeof value !== "string" || value === "") {
-            throw new PostException("Product imageUrl cannot be empty");
+            throw new PostException("Post imageUrl cannot be empty");
         }
         this._imageUrl = value;
     }

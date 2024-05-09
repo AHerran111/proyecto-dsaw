@@ -1,7 +1,7 @@
 "use strict";
 
 let postContainer = document.getElementById('card-container');
-
+let searchBox =document.getElementById("search-box-btn");
 
 function postToHtml(post) {
     return `<div class="card m-2" style="width: 18rem;">
@@ -48,6 +48,20 @@ function removePost(post) {
     postListtoHtml(posts);
     });
 }
+
+
+searchBox.addEventListener("click", function() {
+
+    var searchQuery = document.getElementById("search-box").value;
+    console.log("Search Query: ", searchQuery);
+    
+    if (searchQuery.trim() !== "") {
+        // Redirect to /posts/results.html with the searchQuery as a query parameter
+        window.location.href = "./results.html?query=" + encodeURIComponent(searchQuery);
+      } else {
+        alert("Please enter a search query.");
+      }
+  });
 
 
 

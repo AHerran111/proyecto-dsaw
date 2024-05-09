@@ -32,6 +32,25 @@ router.get(['/posts'],(req, res) => {
 
 });
 
+router.get(['/posts/creator'], (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'creator.html'));
+});
+
+router.post(['/posts'],(req, res) => {
+    //let query = req.query.filter;
+    let post = req.body;
+    console.log('hiii');
+
+    try {
+        dataHandler.createPost(post);
+        res.status(200).send(`Post ${post.title} was created`);
+
+    } catch(e) {
+        res.status(400).send(`Error at creating post`);
+    }
+
+});
+
 router.get(['/posts/:id'],(req, res) => {
     //let query = req.query.filter;
 
@@ -45,6 +64,22 @@ router.get(['/posts/:id'],(req, res) => {
         res.status(400).send("Error obtaining posts",e);
     }
     res.status(200).json(post);
+
+});
+
+router.get(['/posts/search/:query'],(req, res) => {
+    //let query = req.query.filter;
+
+    let query = req.params.query;
+    let posts = [];
+
+    try {
+        posts = dataHandler.searchPosts(query);
+
+    } catch(e) {
+        res.status(400).send("Error obtaining posts",e);
+    }
+    res.status(200).json(posts);
 
 });
 
